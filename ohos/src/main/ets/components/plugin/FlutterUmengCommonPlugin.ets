@@ -44,7 +44,11 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
 
   onMethodCall(call: MethodCall, result: MethodResult): void {
     if (call.method == "init") {
+      const appKey: string = call.argument("androidAppKey") ?? call.argument("iosAppKey") ?? ""
+      const channel: string = call.argument("channel") ?? "default"
       preInit({
+        appKey: appKey,
+        channel: channel,
         context: this.uiContext?.getApplicationContext(),
         plugins: [new InternalPlugin()]
       });
