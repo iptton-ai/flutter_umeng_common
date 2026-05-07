@@ -12,7 +12,16 @@ import { common } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { agree, init, InternalPlugin, onEventObject, preInit, setLogEnabled } from '@umeng/analytics';
 
-/** FlutterUmengCommonPlugin **/
+const IS_DEBUG = __DEBUG__
+const TAG = 'UMengPlugin'
+const DOMAIN = 0xFF00
+
+function debugLog(msg: string): void {
+  if (IS_DEBUG) {
+    hilog.debug(DOMAIN, TAG, msg)
+  }
+}
+
 export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCallHandler, AbilityAware {
   private channel: MethodChannel | null = null;
   private uiContext: common.UIAbilityContext | null = null;
@@ -33,10 +42,10 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
   }
 
   onAttachedToEngine(binding: FlutterPluginBinding): void {
-    hilog.info(0xFF00, 'UMengPlugin', 'onAttachedToEngine called')
+    debugLog('onAttachedToEngine')
     this.channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_umeng_common");
     this.channel.setMethodCallHandler(this)
-    hilog.info(0xFF00, 'UMengPlugin', 'MethodChannel registered')
+    debugLog('MethodChannel registered')
   }
 
   onDetachedFromEngine(binding: FlutterPluginBinding): void {
@@ -46,11 +55,11 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
   }
 
   onMethodCall(call: MethodCall, result: MethodResult): void {
-    hilog.info(0xFF00, 'UMengPlugin', `onMethodCall: ${call.method}`)
+    debugLog(`onMethodCall: ${call.method}`)
     if (call.method == "init") {
       const appKey: string = call.argument("androidAppKey") ?? call.argument("iosAppKey") ?? ""
       const channel: string = call.argument("channel") ?? "default"
-      hilog.info(0xFF00, 'UMengPlugin', `init appKey=${appKey} channel=${channel}`)
+      debugLog(`init appKey=${appKey} channel=${channel}`)
       preInit({
         appKey: appKey,
         channel: channel,
@@ -59,15 +68,15 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
       });
       agree()
       init()
-      setLogEnabled(true)
-      hilog.info(0xFF00, 'UMengPlugin', 'init done')
+      setLogEnabled(IS_DEBUG)
+      debugLog('init done')
       result.success(true)
     } else if (call.method == "onEvent") {
       const event: string = call.argument("event")
       const properties: Record<string, string | number> = call.argument("properties") as Record<string, string | number>
-      hilog.info(0xFF00, 'UMengPlugin', `onEvent: ${event}, params: ${JSON.stringify(properties)}`)
+      debugLog(`onEvent: ${event}, params: ${JSON.stringify(properties)}`)
       onEventObject(event, properties);
-      hilog.info(0xFF00, 'UMengPlugin', `onEvent done: ${event}`)
+      debugLog(`onEvent done: ${event}`)
       result.success(true)
     } else {
       result.notImplemented()

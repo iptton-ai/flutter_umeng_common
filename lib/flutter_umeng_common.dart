@@ -10,16 +10,16 @@ class FlutterUmengCommon {
     required String channel,
   }) async {
     try {
-      debugPrint('[UMeng] Dart: calling init via MethodChannel');
+      if (kDebugMode) debugPrint('[UMeng] calling init');
       final result = await _channel.invokeMethod<bool>('init', {
         'androidAppKey': androidAppKey,
         'iosAppKey': iosAppKey,
         'channel': channel,
       });
-      debugPrint('[UMeng] Dart: init result = $result');
+      if (kDebugMode) debugPrint('[UMeng] init result = $result');
       return result;
     } catch (e) {
-      debugPrint('[UMeng] Dart: init FAILED: $e');
+      if (kDebugMode) debugPrint('[UMeng] init failed: $e');
       return false;
     }
   }
@@ -28,7 +28,7 @@ class FlutterUmengCommon {
     try {
       return await _channel.invokeMethod('onEvent', {"event": event, "properties": properties});
     } catch (e) {
-      debugPrint('[UMeng] Dart: onEvent FAILED: $e');
+      if (kDebugMode) debugPrint('[UMeng] onEvent failed: $e');
       return false;
     }
   }
