@@ -65,7 +65,9 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
     } else if (call.method == "onEvent") {
       const event: string = call.argument("event")
       const properties: Record<string, string | number> = call.argument("properties") as Record<string, string | number>
+      hilog.info(0xFF00, 'UMengPlugin', `onEvent: ${event}, params: ${JSON.stringify(properties)}`)
       onEventObject(event, properties);
+      hilog.info(0xFF00, 'UMengPlugin', `onEvent done: ${event}`)
       result.success(true)
     } else {
       result.notImplemented()
