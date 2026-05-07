@@ -9,7 +9,8 @@ import {
   MethodResult,
 } from '@ohos/flutter_ohos';
 import { common } from '@kit.AbilityKit';
-import { init, InternalPlugin, onEventObject, preInit, setLogEnabled } from '@umeng/analytics';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import { agree, init, InternalPlugin, onEventObject, preInit, setLogEnabled } from '@umeng/analytics';
 
 /** FlutterUmengCommonPlugin **/
 export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCallHandler, AbilityAware {
@@ -46,14 +47,17 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
     if (call.method == "init") {
       const appKey: string = call.argument("androidAppKey") ?? call.argument("iosAppKey") ?? ""
       const channel: string = call.argument("channel") ?? "default"
+      hilog.info(0xFF00, 'UMengPlugin', `init appKey=${appKey} channel=${channel}`)
       preInit({
         appKey: appKey,
         channel: channel,
         context: this.uiContext?.getApplicationContext(),
         plugins: [new InternalPlugin()]
       });
+      agree()
       init()
-      setLogEnabled(false)
+      setLogEnabled(true)
+      hilog.info(0xFF00, 'UMengPlugin', 'init done')
       result.success(true)
     } else if (call.method == "onEvent") {
       const event: string = call.argument("event")
