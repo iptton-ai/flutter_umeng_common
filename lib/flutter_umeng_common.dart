@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class FlutterUmengCommon {
@@ -9,13 +10,16 @@ class FlutterUmengCommon {
     required String channel,
   }) async {
     try {
-      return await _channel.invokeMethod<bool>('init', {
+      debugPrint('[UMeng] Dart: calling init via MethodChannel');
+      final result = await _channel.invokeMethod<bool>('init', {
         'androidAppKey': androidAppKey,
         'iosAppKey': iosAppKey,
         'channel': channel,
       });
-    } on PlatformException catch (e) {
-      print('Failed to invoke init: ${e.message}');
+      debugPrint('[UMeng] Dart: init result = $result');
+      return result;
+    } catch (e) {
+      debugPrint('[UMeng] Dart: init FAILED: $e');
       return false;
     }
   }
@@ -23,8 +27,8 @@ class FlutterUmengCommon {
   static Future<bool> onEvent(String event, Map<String, dynamic> properties) async {
     try {
       return await _channel.invokeMethod('onEvent', {"event": event, "properties": properties});
-    } on PlatformException catch (e) {
-      print('Failed to invoke onEvent: ${e.message}');
+    } catch (e) {
+      debugPrint('[UMeng] Dart: onEvent FAILED: $e');
       return false;
     }
   }

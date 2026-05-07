@@ -33,8 +33,10 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
   }
 
   onAttachedToEngine(binding: FlutterPluginBinding): void {
+    hilog.info(0xFF00, 'UMengPlugin', 'onAttachedToEngine called')
     this.channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_umeng_common");
     this.channel.setMethodCallHandler(this)
+    hilog.info(0xFF00, 'UMengPlugin', 'MethodChannel registered')
   }
 
   onDetachedFromEngine(binding: FlutterPluginBinding): void {
@@ -44,6 +46,7 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
   }
 
   onMethodCall(call: MethodCall, result: MethodResult): void {
+    hilog.info(0xFF00, 'UMengPlugin', `onMethodCall: ${call.method}`)
     if (call.method == "init") {
       const appKey: string = call.argument("androidAppKey") ?? call.argument("iosAppKey") ?? ""
       const channel: string = call.argument("channel") ?? "default"
