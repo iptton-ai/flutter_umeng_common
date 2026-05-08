@@ -12,7 +12,7 @@ import { common } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { agree, init, InternalPlugin, onEventObject, preInit, setLogEnabled } from '@umeng/analytics';
 
-const IS_DEBUG = __DEBUG__
+const IS_DEBUG: boolean = false
 const TAG = 'UMengPlugin'
 const DOMAIN = 0xFF00
 
