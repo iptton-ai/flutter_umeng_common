@@ -66,10 +66,14 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
         context: this.uiContext?.getApplicationContext(),
         plugins: [new InternalPlugin()]
       });
+      setLogEnabled(IS_DEBUG)
+      debugLog('preInit done')
+      result.success(true)
+    } else if (call.method == "startTracking") {
+      debugLog('startTracking: agree + init')
       agree()
       init()
-      setLogEnabled(IS_DEBUG)
-      debugLog('init done')
+      debugLog('startTracking done')
       result.success(true)
     } else if (call.method == "onEvent") {
       const event: string = call.argument("event")

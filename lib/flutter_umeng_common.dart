@@ -24,6 +24,18 @@ class FlutterUmengCommon {
     }
   }
 
+  static Future<bool?> startTracking() async {
+    try {
+      if (kDebugMode) debugPrint('[UMeng] calling startTracking');
+      final result = await _channel.invokeMethod<bool>('startTracking');
+      if (kDebugMode) debugPrint('[UMeng] startTracking result = $result');
+      return result;
+    } catch (e) {
+      if (kDebugMode) debugPrint('[UMeng] startTracking failed: $e');
+      return false;
+    }
+  }
+
   static Future<bool> onEvent(String event, Map<String, dynamic> properties) async {
     try {
       return await _channel.invokeMethod('onEvent', {"event": event, "properties": properties});
