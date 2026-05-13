@@ -72,9 +72,13 @@ export default class FlutterUmengCommonPlugin implements FlutterPlugin, MethodCa
     } else if (call.method == "startTracking") {
       debugLog('startTracking: agree + init')
       agree()
-      init()
-      debugLog('startTracking done')
-      result.success(true)
+      init().then(() => {
+        hilog.info(DOMAIN, TAG, 'startTracking done (init resolved)')
+        result.success(true)
+      }).catch((err: Error) => {
+        hilog.error(DOMAIN, TAG, `startTracking failed: ${err.message}`)
+        result.success(false)
+      })
     } else if (call.method == "onEvent") {
       const event: string = call.argument("event")
       const properties: Record<string, string | number> = call.argument("properties") as Record<string, string | number>
