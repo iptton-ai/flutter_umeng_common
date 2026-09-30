@@ -1,6 +1,6 @@
 name: flutter_umeng_common
 description: "Umeng Flutter Plugin, supporting Android,Ohos and iOS platforms"
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/winter-tech/flutter_umeng_common
 
 environment:
